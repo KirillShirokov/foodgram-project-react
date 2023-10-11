@@ -101,7 +101,7 @@ class Recipe(models.Model):
         ordering = ('-pub_date',)
 
     def __str__(self):
-        return f'{self.name}'
+        return self.name
 
 
 class IngredientOnRecipe(models.Model):
@@ -139,7 +139,7 @@ class IngredientOnRecipe(models.Model):
         ]
 
     def __str__(self):
-        return self.ingredient.name
+        return f'{self.ingredient.name} - {self.amount}'
 
 
 class FavoriteRecipe(models.Model):
@@ -168,7 +168,7 @@ class FavoriteRecipe(models.Model):
         ]
 
     def __str__(self):
-        return self.recipe.name
+        f'{self.user} добавил {self.recipe.name}'
 
 
 class ShoppingList(models.Model):
@@ -197,4 +197,4 @@ class ShoppingList(models.Model):
         ]
 
     def __str__(self):
-        return self.recipe.name
+        f'{self.user} добавил {self.recipe.name}'
