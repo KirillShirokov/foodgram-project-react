@@ -62,6 +62,13 @@ class RecipeViewSet(viewsets.ModelViewSet):
         ShoppingList.objects.filter(recipe=recipe, user=request.user).delete()
         return Response(status=204)
     
+    @action(detail=True,methods=['GET'], permission_classes=(IsAuthenticated,))
+    def is_in_shopping_cart(self, request, pk):
+        recipe = get_object_or_404(Recipe, id=pk)
+        serializer = serializers.ShortRecipeSerializer(recipe)
+        return Response(serializer.data, status=201)
+        
+    
     @action(detail=True,methods=['POST', 'DELETE'], permission_classes=(IsAuthenticated,))
     def favorite(self, request, pk):
         recipe = get_object_or_404(Recipe, id=pk)

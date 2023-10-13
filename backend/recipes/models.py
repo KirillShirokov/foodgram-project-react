@@ -196,5 +196,5 @@ class ShoppingList(models.Model):
             )
         ]
 
-    def __str__(self):
-        f'{self.user} добавил {self.recipe.name}'
+    # def __str__(self):
+    #     f'{self.user} добавил {self.recipe.name}'
