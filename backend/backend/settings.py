@@ -135,16 +135,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
-    # 'DEFAULT_PERMISSION_CLASSES': [
-    #     'rest_framework.permissions.AllowAny', 
-    # ],
-
-    # 'DEFAULT_AUTHENTICATION_CLASSES': [
-    #     'rest_framework_simplejwt.authentication.JWTAuthentication',
-    # ],
 
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ],
 
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
@@ -152,20 +146,15 @@ REST_FRAMEWORK = {
 
 }
 
-# SIMPLE_JWT = {
-#     # Устанавливаем срок жизни токена
-#    'ACCESS_TOKEN_LIFETIME': timedelta(days=30),
-#    'AUTH_HEADER_TYPES': ('Bearer',),
-# }
-
 DJOSER = {
     'LOGIN_FIELD': 'email',
+    'HIDE_USERS': False,
     'SERIALIZERS': {
         'user_create': 'api.serializers.CustomUserCreateSerializer',
         'current_user': 'api.serializers.CustomUserSerializer',
         'user': 'api.serializers.CustomUserSerializer',
     },
     'PERMISSIONS': {
-        'user_create': ['rest_framework.permissions.AllowAny'],
+        'user': ['rest_framework.permissions.AllowAny'],
     },
 }

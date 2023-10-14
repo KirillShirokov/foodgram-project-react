@@ -1,18 +1,27 @@
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-
+from django.db.models import Sum
+from django.http import HttpResponse
 from djoser.views import UserViewSet as DjoserUserViewSet
 from rest_framework import filters, mixins, viewsets, generics
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny, IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
-from api.filters import RecipeFilter
+
+from api.filters import RecipeFilter, IngredientFilter
 from api import serializers
 from api.permissions import IsAuthorOrReadOnly, IsAdminOrReadOnly
-from recipes.models import *
+from recipes.models import (
+    User,
+    Ingredient,
+    Tag,
+    Recipe,
+    IngredientOnRecipe,
+    FavoriteRecipe,
+    ShoppingList,
+)
 from users.models import Follow
-from api.filters import IngredientFilter
 
 
 class IngredientsViewSet(viewsets.ReadOnlyModelViewSet):
@@ -36,7 +45,11 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
 class RecipeViewSet(viewsets.ModelViewSet):
     '''Вьюсет рецептов'''
     permission_classes = (IsAuthorOrReadOnly,)
-    queryset = Recipe.objects.select_related('author').prefetch_related('tags','ingredients_amount', 'ingredients_amount__ingredient').all().defer('author__password')
+    queryset = Recipe.objects.select_related('author').prefetch_related(
+        'tags',
+        'ingredients_amount',
+        'ingredients_amount__ingredient'
+    ).all()
     pagination_class = PageNumberPagination
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
@@ -62,10 +75,35 @@ class RecipeViewSet(viewsets.ModelViewSet):
         ShoppingList.objects.filter(recipe=recipe, user=request.user).delete()
         return Response(status=204)
     
-    @action(detail=True,methods=['GET'], permission_classes=(IsAuthenticated,))
-    def download_shopping_cart(self, request, pk):
-        pass
-        
+    @action(detail=False,methods=['GET'], permission_classes=(IsAuthenticated,))
+    def download_shopping_cart(self, request):
+        current_user=request.user
+        ingredients = IngredientOnRecipe.objects.filter(
+            recipe__list__user=current_user
+        ).values(
+            'ingredient__name', 'ingredient__meashurement_unit'
+        ).annotate(
+            total_amount=Sum('amount')
+        ).order_by('ingredient__name')
+        print(ingredients)
+
+        shopping_list = 'Список покупок\n'
+        for ingredient in ingredients:
+            shopping_list += (
+                f'{ingredient["ingredient__name"]}'
+                f'({ingredient["ingredient__meashurement_unit"]}) - '
+                f'{ingredient["total_amount"]}\n'
+            )
+        response = HttpResponse(shopping_list, 'Content-Type: text/plain')
+        response['Content-Dispoisition'] = 'attachement; filename="shopping_list.txt"'
+        return response
+
+# [{'ingredient__name': 'ванилин', 'ingredient__meashurement_unit': 'г', 'total_amount': 4},
+#  {'ingredient__name': 'винегрет', 'ingredient__meashurement_unit': 'г', 'total_amount': 1}, 
+# {'ingredient__name': 'вода', 'ingredient__meashurement_unit': 'г', 'total_amount': 2}, 
+# {'ingredient__name': 'ерш', 'ingredient__meashurement_unit': 'г', 'total_amount': 3}, 
+# {'ingredient__name': 'кабачки', 'ingredient__meashurement_unit': 'г', 'total_amount': 5}]>
+  
     
     @action(detail=True,methods=['POST', 'DELETE'], permission_classes=(IsAuthenticated,))
     def favorite(self, request, pk):
@@ -84,16 +122,26 @@ class RecipeViewSet(viewsets.ModelViewSet):
 class UserViewSet(DjoserUserViewSet):
     '''Вьюсет действий юзера'''
 
-    @action(detail=False, methods=['GET'], permission_classes=(IsAuthenticated,))
+    @action(detail=False,
+            methods=['GET'],
+            permission_classes=(IsAuthenticated,)
+    )
     def subscriptions(self, request):
         authors = User.objects.filter(
             following__user=request.user
         )
         page = self.paginate_queryset(authors)
-        serializer = serializers.UserWithRecipesSerializer(page, context={'request': request}, many=True)
+        serializer = serializers.UserWithRecipesSerializer(
+            page,
+            context={'request': request},
+            many=True
+        )
         return self.get_paginated_response(serializer.data)
-    
-    @action(detail=True, methods=['POST', 'DELETE'], permission_classes=(IsAuthenticated,))
+
+    @action(detail=True,
+            methods=['POST', 'DELETE'],
+            permission_classes=(IsAuthenticated,)
+    )
     def subscribe(self, request, id):
         author = get_object_or_404(User, id=id)
         if request.method == 'POST':
@@ -101,13 +149,11 @@ class UserViewSet(DjoserUserViewSet):
                 user=request.user,
                 following=author
             )
-            serializer = serializers.UserWithRecipesSerializer(author, context={'request': request})
+            serializer = serializers.UserWithRecipesSerializer(
+                author,
+                context={'request': request}
+            )
             return Response(serializer.data, status=201)
-        
+
         Follow.objects.filter(user=request.user, following=author).delete()
         return Response(status=204)
-        
-
-        
-
-        
