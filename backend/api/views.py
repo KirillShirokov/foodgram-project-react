@@ -2,16 +2,17 @@ from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Sum
 from django.http import HttpResponse
+
 from djoser.views import UserViewSet as DjoserUserViewSet
-from rest_framework import filters, mixins, viewsets, generics
+from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
 
 from api.filters import RecipeFilter, IngredientFilter
 from api import serializers
-from api.permissions import IsAuthorOrReadOnly, IsAdminOrReadOnly
+from api.permissions import IsAuthorOrReadOnly
 from recipes.models import (
     User,
     Ingredient,
@@ -61,8 +62,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
-    
-    @action(detail=True,methods=['POST', 'DELETE'], permission_classes=(IsAuthenticated,))
+
+    @action(detail=True,
+            methods=['POST', 'DELETE'],
+            permission_classes=(IsAuthenticated,)
+            )
     def shopping_cart(self, request, pk):
         recipe = get_object_or_404(Recipe, id=pk)
         if request.method == 'POST':
@@ -74,10 +78,13 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=201)
         ShoppingList.objects.filter(recipe=recipe, user=request.user).delete()
         return Response(status=204)
-    
-    @action(detail=False,methods=['GET'], permission_classes=(IsAuthenticated,))
+
+    @action(detail=False,
+            methods=['GET'],
+            permission_classes=(IsAuthenticated,)
+            )
     def download_shopping_cart(self, request):
-        current_user=request.user
+        current_user = request.user
         ingredients = IngredientOnRecipe.objects.filter(
             recipe__list__user=current_user
         ).values(
@@ -85,7 +92,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
         ).annotate(
             total_amount=Sum('amount')
         ).order_by('ingredient__name')
-        print(ingredients)
 
         shopping_list = 'Список покупок\n'
         for ingredient in ingredients:
@@ -95,17 +101,15 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 f'{ingredient["total_amount"]}\n'
             )
         response = HttpResponse(shopping_list, 'Content-Type: text/plain')
-        response['Content-Dispoisition'] = 'attachement; filename="shopping_list.txt"'
+        response[
+            'Content-Dispoisition'
+        ] = 'attachement; filename="shopping_list.txt"'
         return response
 
-# [{'ingredient__name': 'ванилин', 'ingredient__meashurement_unit': 'г', 'total_amount': 4},
-#  {'ingredient__name': 'винегрет', 'ingredient__meashurement_unit': 'г', 'total_amount': 1}, 
-# {'ingredient__name': 'вода', 'ingredient__meashurement_unit': 'г', 'total_amount': 2}, 
-# {'ingredient__name': 'ерш', 'ingredient__meashurement_unit': 'г', 'total_amount': 3}, 
-# {'ingredient__name': 'кабачки', 'ingredient__meashurement_unit': 'г', 'total_amount': 5}]>
-  
-    
-    @action(detail=True,methods=['POST', 'DELETE'], permission_classes=(IsAuthenticated,))
+    @action(detail=True,
+            methods=['POST', 'DELETE'],
+            permission_classes=(IsAuthenticated,)
+            )
     def favorite(self, request, pk):
         recipe = get_object_or_404(Recipe, id=pk)
         if request.method == 'POST':
@@ -115,7 +119,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
             )
             serializer = serializers.ShortRecipeSerializer(recipe)
             return Response(serializer.data, status=201)
-        FavoriteRecipe.objects.filter(recipe=recipe, user=request.user).delete()
+        FavoriteRecipe.objects.filter(
+            recipe=recipe,
+            user=request.user
+        ).delete()
         return Response(status=204)
 
 
@@ -125,7 +132,7 @@ class UserViewSet(DjoserUserViewSet):
     @action(detail=False,
             methods=['GET'],
             permission_classes=(IsAuthenticated,)
-    )
+            )
     def subscriptions(self, request):
         authors = User.objects.filter(
             following__user=request.user
@@ -141,7 +148,7 @@ class UserViewSet(DjoserUserViewSet):
     @action(detail=True,
             methods=['POST', 'DELETE'],
             permission_classes=(IsAuthenticated,)
-    )
+            )
     def subscribe(self, request, id):
         author = get_object_or_404(User, id=id)
         if request.method == 'POST':

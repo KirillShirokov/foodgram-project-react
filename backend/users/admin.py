@@ -15,4 +15,5 @@ class FollowAdmin(admin.ModelAdmin):
     search_fields = ('user', 'following')
     list_filter = ('user', 'following')
 
+
 admin.site.register(Follow, FollowAdmin)

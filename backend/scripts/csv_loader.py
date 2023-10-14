@@ -10,8 +10,10 @@ def run():
         Ingredient.objects.all().delete()
         for row in reader:
             print(row)
-            ingredients = Ingredient(name=row[0],
-                                meashurement_unit=row[1])
+            ingredients = Ingredient(
+                name=row[0],
+                meashurement_unit=row[1]
+            )
             ingredients.save()
 
     print('Загрузка в БД прошла успешно')

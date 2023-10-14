@@ -29,6 +29,6 @@ class Follow(models.Model):
                 name='unique_user_following'
             )
         ]
-    
+
     def __str__(self) -> str:
         return f'{self.user} подписан на {self.author}'

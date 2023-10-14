@@ -12,10 +12,7 @@ from recipes.models import (
     Tag,
     Recipe,
     IngredientOnRecipe,
-    FavoriteRecipe,
-    ShoppingList
 )
-from users.models import Follow
 
 User = get_user_model()
 

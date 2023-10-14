@@ -1,4 +1,3 @@
-from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, RegexValidator
 from django.contrib.auth import get_user_model
 from django.db import models
@@ -89,7 +88,12 @@ class Recipe(models.Model):
     )
     cooking_time = models.PositiveIntegerField(
         verbose_name='Время приготовления (в минутах)',
-        validators=[MinValueValidator(1, message='Значение должно быть больше или равно 1')],
+        validators=[
+            MinValueValidator(
+                1,
+                message='Значение должно быть больше или равно 1'
+            )
+        ],
     )
     pub_date = models.DateTimeField(
         auto_now_add=True,
