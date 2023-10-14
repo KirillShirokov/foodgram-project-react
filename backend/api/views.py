@@ -12,6 +12,7 @@ from api import serializers
 from api.permissions import IsAuthorOrReadOnly, IsAdminOrReadOnly
 from recipes.models import *
 from users.models import Follow
+from api.filters import IngredientFilter
 
 
 class IngredientsViewSet(viewsets.ReadOnlyModelViewSet):
@@ -20,8 +21,8 @@ class IngredientsViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = serializers.IngredientSerializer
     pagination_class = None
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ('name',)
+    filter_backends = (IngredientFilter,)
+    search_fields = ('^name',)
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
@@ -35,11 +36,10 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
 class RecipeViewSet(viewsets.ModelViewSet):
     '''Вьюсет рецептов'''
     permission_classes = (IsAuthorOrReadOnly,)
-    queryset = Recipe.objects.all()
+    queryset = Recipe.objects.select_related('author').prefetch_related('tags','ingredients_amount', 'ingredients_amount__ingredient').all().defer('author__password')
     pagination_class = PageNumberPagination
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
-
 
     def get_serializer_class(self):
         if self.action in ('list', 'retrieve'):
@@ -63,10 +63,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return Response(status=204)
     
     @action(detail=True,methods=['GET'], permission_classes=(IsAuthenticated,))
-    def is_in_shopping_cart(self, request, pk):
-        recipe = get_object_or_404(Recipe, id=pk)
-        serializer = serializers.ShortRecipeSerializer(recipe)
-        return Response(serializer.data, status=201)
+    def download_shopping_cart(self, request, pk):
+        pass
         
     
     @action(detail=True,methods=['POST', 'DELETE'], permission_classes=(IsAuthenticated,))

@@ -168,7 +168,7 @@ class FavoriteRecipe(models.Model):
         ]
 
     def __str__(self):
-        f'{self.user} добавил {self.recipe.name}'
+        return f'{self.user} добавил {self.recipe.name}'
 
 
 class ShoppingList(models.Model):
@@ -196,5 +196,5 @@ class ShoppingList(models.Model):
             )
         ]
 
-    # def __str__(self):
-    #     f'{self.user} добавил {self.recipe.name}'
+    def __str__(self):
+        return f'{self.user} добавил {self.recipe.name}'
