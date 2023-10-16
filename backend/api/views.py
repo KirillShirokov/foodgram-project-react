@@ -12,7 +12,7 @@ from rest_framework.pagination import PageNumberPagination
 
 from api.filters import RecipeFilter, IngredientFilter
 from api import serializers
-from api.permissions import IsAuthorOrReadOnly
+from api.permissions import IsAdminOrAuthorOrReadOnly
 from recipes.models import (
     User,
     Ingredient,
@@ -26,7 +26,7 @@ from users.models import Follow
 
 
 class IngredientsViewSet(viewsets.ReadOnlyModelViewSet):
-    '''Вьюсет ингридиентов'''
+    """Вьюсет ингридиентов"""
     permission_classes = (AllowAny,)
     queryset = Ingredient.objects.all()
     serializer_class = serializers.IngredientSerializer
@@ -36,7 +36,7 @@ class IngredientsViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
-    '''Вьюсет тэгов'''
+    """Вьюсет тэгов"""
     permission_classes = (AllowAny,)
     queryset = Tag.objects.all()
     serializer_class = serializers.TagSerializer
@@ -44,8 +44,8 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
-    '''Вьюсет рецептов'''
-    permission_classes = (IsAuthorOrReadOnly,)
+    """Вьюсет рецептов"""
+    permission_classes = (IsAdminOrAuthorOrReadOnly,)
     queryset = Recipe.objects.select_related('author').prefetch_related(
         'tags',
         'ingredients_amount',
@@ -127,7 +127,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
 
 class UserViewSet(DjoserUserViewSet):
-    '''Вьюсет действий юзера'''
+    """Вьюсет действий юзера"""
 
     @action(detail=False,
             methods=['GET'],

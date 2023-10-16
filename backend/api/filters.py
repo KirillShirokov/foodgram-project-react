@@ -21,15 +21,15 @@ class RecipeFilter(FilterSet):
         fields = ['author', 'is_favorited', 'tags']
 
     def get_is_favorited(self, queryset, name, value):
-        current_user = self.request.user
+        # current_user = self.request.user
         if value:
-            return queryset.filter(favorites__user=current_user)
+            return queryset.filter(favorites__user=self.request.user)
         return queryset
 
     def get_is_in_shopping_cart(self, queryset, name, value):
-        current_user = self.request.user
+        # current_user = self.request.user
         if value:
-            return queryset.filter(list__user=current_user)
+            return queryset.filter(list__user=self.request.user)
         return queryset
 
 

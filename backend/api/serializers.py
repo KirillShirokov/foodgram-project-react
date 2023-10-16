@@ -18,7 +18,7 @@ User = get_user_model()
 
 
 class Base64ImageField(serializers.ImageField):
-    '''Обработка изображения'''
+    """Обработка изображения"""
     def to_internal_value(self, data):
         if isinstance(data, str) and data.startswith('data:image'):
             format, imgstr = data.split(';base64,')
@@ -30,7 +30,7 @@ class Base64ImageField(serializers.ImageField):
 
 
 class CustomUserCreateSerializer(UserCreateSerializer):
-    '''Сериализатор кстомного юзера'''
+    """Сериализатор кастомного юзера"""
     email = serializers.EmailField(
         validators=[UniqueValidator(queryset=User.objects.all())])
     username = serializers.CharField(
@@ -51,7 +51,7 @@ class CustomUserCreateSerializer(UserCreateSerializer):
 
 
 class CustomUserSerializer(UserSerializer):
-    '''Сериализатор расштренного кастомного юзера, с отображением подписки'''
+    """Сериализатор расштренного кастомного юзера, с отображением подписки"""
     is_subscribed = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
@@ -73,7 +73,7 @@ class CustomUserSerializer(UserSerializer):
 
 
 class UserWithRecipesSerializer(CustomUserSerializer):
-    '''Сериализтор кастомного юзера с рецептом и счетчиком'''
+    """Сериализтор кастомного юзера с рецептом и счетчиком"""
     recipes = serializers.SerializerMethodField(read_only=True)
     recipes_count = serializers.SerializerMethodField(read_only=True)
 
@@ -102,7 +102,7 @@ class UserWithRecipesSerializer(CustomUserSerializer):
 
 
 class IngredientSerializer(serializers.ModelSerializer):
-    '''Сериализатор ингредиента'''
+    """Сериализатор ингредиента"""
     id = serializers.ReadOnlyField()
     name = serializers.ReadOnlyField()
     measurement_unit = serializers.ReadOnlyField()
@@ -113,7 +113,7 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 
 class IngredientAmountSerializer(serializers.ModelSerializer):
-    '''Сериализатор ингредиента в рецепте'''
+    """Сериализатор ингредиента в рецепте"""
     id = serializers.ReadOnlyField(source='ingredient.id')
     name = serializers.ReadOnlyField(source='ingredient.name')
     measurement_unit = serializers.ReadOnlyField(
@@ -126,7 +126,7 @@ class IngredientAmountSerializer(serializers.ModelSerializer):
 
 
 class AddIngredientSerializer(serializers.ModelSerializer):
-    '''Сериализатор количества ингредиента в создании рецепта'''
+    """Сериализатор количества ингредиента в создании рецепта"""
     id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
 
     class Meta:
@@ -135,14 +135,14 @@ class AddIngredientSerializer(serializers.ModelSerializer):
 
 
 class TagSerializer(serializers.ModelSerializer):
-    '''Сериализатор тегов'''
+    """Сериализатор тегов"""
     class Meta:
         model = Tag
         fields = ('__all__')
 
 
 class AddTagSerializer(serializers.ModelSerializer):
-    '''Сериализатор добавления тегов'''
+    """Сериализатор добавления тегов"""
     tags = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(),
         many=True
@@ -154,7 +154,7 @@ class AddTagSerializer(serializers.ModelSerializer):
 
 
 class RecipeListSerializer(serializers.ModelSerializer):
-    '''Сериализатор отображения списка рецептов'''
+    """Сериализатор отображения списка рецептов"""
     tags = TagSerializer(many=True, read_only=True)
     author = CustomUserSerializer()
     image = Base64ImageField(required=False, allow_null=True)
@@ -194,7 +194,7 @@ class RecipeListSerializer(serializers.ModelSerializer):
 
 
 class RecipeCreateSerializer(serializers.ModelSerializer):
-    '''Сериализатор создания рецепта'''
+    """Сериализатор создания рецепта"""
     tags = serializers.PrimaryKeyRelatedField(
         many=True, queryset=Tag.objects.all(),
     )
@@ -214,7 +214,6 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
 
     @atomic
     def create(self, validate_data):
-        print(validate_data)
         tags = validate_data.pop('tags')
         ingredients = validate_data.pop('ingredients')
         recipe = Recipe.objects.create(**validate_data)
@@ -223,7 +222,6 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         return recipe
 
     def update(self, recipe, validate_data):
-        print(validate_data)
         tags = validate_data.pop('tags')
         ingredients = validate_data.pop('ingredients')
         recipe = super().update(recipe, validate_data)
@@ -246,7 +244,7 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
 
 
 class ShortRecipeSerializer(serializers.ModelSerializer):
-    '''Сериализатор рецепта(укороченная версия)'''
+    """Сериализатор рецепта(укороченная версия)"""
     image = Base64ImageField(required=False, allow_null=True)
 
     class Meta:
