@@ -3,11 +3,11 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-load_dotenv()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+load_dotenv(BASE_DIR.parent / 'infra' / '.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -20,11 +20,7 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 # Временная мера, для работы с фронтом
 ALLOWED_HOSTS = ['*']
 
-INTERNAL_IPS = [
-    # ...
-    "127.0.0.1",
-    # ...
-]
+
 
 # Application definition
 
@@ -43,7 +39,6 @@ INSTALLED_APPS = [
     'django_filters',
     'djoser',
     'django_extensions',
-    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -54,7 +49,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -141,6 +135,7 @@ REST_FRAMEWORK = {
 
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
+
     ],
 
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',

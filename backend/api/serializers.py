@@ -1,6 +1,5 @@
 from django.db.transaction import atomic
 from djoser.serializers import UserCreateSerializer, UserSerializer
-from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
 
 from rest_framework import serializers
@@ -179,15 +178,15 @@ class RecipeListSerializer(serializers.ModelSerializer):
 
     def get_is_favorited(self, recipe):
         user = self.context['request'].user
-        if user.is_anonymous:
-            return False
-        return recipe.favorites.filter(user=user).exists()
+        return not user.is_anonymous and (recipe.
+                                          favoriterecipes.
+                                          filter(user=user).exists())
 
     def get_is_in_shopping_cart(self, recipe):
         user = self.context['request'].user
-        if user.is_anonymous:
-            return False
-        return recipe.list.filter(user=user).exists()
+        return not user.is_anonymous and (recipe.
+                                          shoppinglists.
+                                          filter(user=user).exists())
 
 
 class RecipeCreateSerializer(serializers.ModelSerializer):
@@ -237,14 +236,6 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
             ) for ingredient in ingredients
         ]
         IngredientOnRecipe.objects.bulk_create(ingredients)
-
-        # for ingredient in ingredients:
-        #     recipe, ingredient, amount = ingredient
-        #     IngredientOnRecipe.objects.create(
-        #         recipe=recipe,
-        #         ingredient=ingredient['id'],
-        #         amount=ingredient['amount']
-        #     )
 
     def to_representation(self, recipe):
         return RecipeListSerializer(recipe, context=self.context).data

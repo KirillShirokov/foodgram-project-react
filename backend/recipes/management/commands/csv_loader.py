@@ -14,7 +14,11 @@ class Command(BaseCommand):
             ingredients = []
             for row in reader:
                 name, meashurement_unit = row
-                ingredients.append(Ingredient(name = name, meashurement_unit = meashurement_unit))
+                ingredients.append(Ingredient(
+                    name=name,
+                    meashurement_unit=meashurement_unit
+                    )
+                )
             Ingredient.objects.bulk_create(ingredients)
 
         print('Загрузка в БД прошла успешно')

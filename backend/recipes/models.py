@@ -1,10 +1,10 @@
-from django.core.validators import MinValueValidator, RegexValidator, MaxValueValidator
-from django.contrib.auth import get_user_model
+from django.core.validators import (MinValueValidator,
+                                    RegexValidator,
+                                    MaxValueValidator)
 from django.db import models
 
 from users.models import User
 from core.constants import Constant
-# User = get_user_model()
 
 
 class Ingredient(models.Model):
@@ -158,20 +158,27 @@ class IngredientOnRecipe(models.Model):
         return f'{self.ingredient.name} - {self.amount}'
 
 
-class FavoriteRecipe(models.Model):
+class BaseRecipe(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='favorites',
-        verbose_name='Пользователь',
+        related_name='%(class)ss'
+
     )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='favorites',
-        verbose_name='Избранный рецепт',
+        related_name='%(class)ss'
     )
 
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return f'{self.user} добавил {self.recipe.name}'
+
+
+class FavoriteRecipe(BaseRecipe):
     class Meta:
         verbose_name = 'Избранный рецепт'
         verbose_name_plural = 'Избранные рецепты'
@@ -183,24 +190,8 @@ class FavoriteRecipe(models.Model):
             )
         ]
 
-    def __str__(self):
-        return f'{self.user} добавил {self.recipe.name}'
 
-
-class ShoppingList(models.Model):
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        verbose_name='Владелец',
-        related_name='list',
-    )
-    recipe = models.ForeignKey(
-        Recipe,
-        on_delete=models.CASCADE,
-        verbose_name='Рецепт',
-        related_name='list',
-    )
-
+class ShoppingList(BaseRecipe):
     class Meta:
         verbose_name = 'Список покупок'
         verbose_name_plural = 'Список покупок'
@@ -211,6 +202,3 @@ class ShoppingList(models.Model):
                 name='unique_user_recipe',
             )
         ]
-
-    def __str__(self):
-        return f'{self.user} добавил {self.recipe.name}'
