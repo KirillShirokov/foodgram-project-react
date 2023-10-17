@@ -16,9 +16,7 @@ class Command(BaseCommand):
                 name, meashurement_unit = row
                 ingredients.append(Ingredient(
                     name=name,
-                    meashurement_unit=meashurement_unit
-                    )
-                )
+                    meashurement_unit=meashurement_unit))
             Ingredient.objects.bulk_create(ingredients)
 
         print('Загрузка в БД прошла успешно')
