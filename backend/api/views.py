@@ -14,7 +14,6 @@ from api.filters import RecipeFilter, IngredientFilter
 from api import serializers
 from api.permissions import IsAdminOrAuthorOrReadOnly
 from recipes.models import (
-    User,
     Ingredient,
     Tag,
     Recipe,
@@ -22,7 +21,7 @@ from recipes.models import (
     FavoriteRecipe,
     ShoppingList,
 )
-from users.models import Follow
+from users.models import Follow, User
 
 
 class IngredientsViewSet(viewsets.ReadOnlyModelViewSet):

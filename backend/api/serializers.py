@@ -13,8 +13,7 @@ from recipes.models import (
     Recipe,
     IngredientOnRecipe,
 )
-
-User = get_user_model()
+from users.models import User
 
 
 class Base64ImageField(serializers.ImageField):
@@ -35,8 +34,6 @@ class CustomUserCreateSerializer(UserCreateSerializer):
         validators=[UniqueValidator(queryset=User.objects.all())])
     username = serializers.CharField(
         validators=[UniqueValidator(queryset=User.objects.all())])
-    first_name = serializers.CharField()
-    last_name = serializers.CharField()
 
     class Meta:
         model = User
@@ -232,12 +229,22 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def create_ingredients(ingredients, recipe):
-        for ingredient in ingredients:
-            IngredientOnRecipe.objects.create(
+        ingredients = [
+            IngredientOnRecipe(
                 recipe=recipe,
                 ingredient=ingredient['id'],
                 amount=ingredient['amount']
-            )
+            ) for ingredient in ingredients
+        ]
+        IngredientOnRecipe.objects.bulk_create(ingredients)
+
+        # for ingredient in ingredients:
+        #     recipe, ingredient, amount = ingredient
+        #     IngredientOnRecipe.objects.create(
+        #         recipe=recipe,
+        #         ingredient=ingredient['id'],
+        #         amount=ingredient['amount']
+        #     )
 
     def to_representation(self, recipe):
         return RecipeListSerializer(recipe, context=self.context).data
