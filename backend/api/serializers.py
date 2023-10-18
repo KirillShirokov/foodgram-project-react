@@ -1,10 +1,10 @@
+import base64
 from django.db.transaction import atomic
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from django.core.files.base import ContentFile
 
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
-import base64
 
 from recipes.models import (
     Ingredient,

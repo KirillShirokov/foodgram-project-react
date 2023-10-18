@@ -77,9 +77,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     @shopping_cart.mapping.delete
     def delete_shopping_cart(self, request, pk):
-        recipe = get_object_or_404(Recipe, id=pk)
         shopping_cart = get_object_or_404(ShoppingList,
-                                          recipe=recipe,
+                                          recipe=pk,
                                           user=request.user)
         shopping_cart.delete()
         return Response(status=204)
@@ -126,9 +125,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     @favorite.mapping.delete
     def delete_favorite(self, request, pk):
-        recipe = get_object_or_404(Recipe, id=pk)
         favorite_recipe = get_object_or_404(FavoriteRecipe,
-                                            recipe=recipe,
+                                            recipe=pk,
                                             user=request.user)
         favorite_recipe.delete()
         return Response(status=204)
@@ -154,21 +152,25 @@ class UserViewSet(DjoserUserViewSet):
         return self.get_paginated_response(serializer.data)
 
     @action(detail=True,
-            methods=['POST', 'DELETE'],
+            methods=['POST'],
             permission_classes=(IsAuthenticated,)
             )
     def subscribe(self, request, id):
-        author = get_object_or_404(User, id=id)
-        if request.method == 'POST':
-            Follow.objects.create(
-                user=request.user,
-                following=author
-            )
-            serializer = serializers.UserWithRecipesSerializer(
-                author,
-                context={'request': request}
-            )
-            return Response(serializer.data, status=201)
+        author = get_object_or_404(User, pk=id)
+        Follow.objects.create(
+            user=request.user,
+            following=author
+        )
+        serializer = serializers.UserWithRecipesSerializer(
+            author,
+            context={'request': request}
+        )
+        return Response(serializer.data, status=201)
 
-        Follow.objects.filter(user=request.user, following=author).delete()
+    @subscribe.mapping.delete
+    def delete_subscribe(self, request, id):
+        user_subscribe = get_object_or_404(Follow,
+                                           user=request.user,
+                                           following=id)
+        user_subscribe.delete()
         return Response(status=204)

@@ -1,18 +1,23 @@
-import enum
+"""Константы модели ингредиента (Ingredient)"""
+MAX_LENGTH_NAME_ING = 200
+MAX_LENGTH_MEASUREMENT_UNIT_ING = 200
 
+"""Константы модели тега (Tag)"""
+MAX_LENGTH_NAME_TAG = 200
+MAX_LENGTH_COLOR_TAG = 7
+MAX_LENGTH_SLUG_TAG = 200
 
-class Constant(enum.Enum):
+"""Констанаты модели рецепта (Recipe)"""
+MAX_LENGTH_NAME_REC = 200
+MIN_COOKING_TIME_REC = 1
+MAX_COOKING_TIME_REC = 1440
 
-    max_length_name_ingridient = 200
-    max_length_meashurement_unit_ingredient = 200
-    max_length_name_tag = 200
-    max_length_color_tag = 7
-    max_length_slug_tag = 200
-    max_length_name_recipe = 200
-    min_cooking_time_recipe = 1
-    max_cooking_time_recipe = 1440
-    min_amount_ingredient = 1
-    max_length_email_user = 250
-    max_length_username_user = 150
-    max_length_first_name_user = 150
-    max_length_last_name_user = 150
+"""Константы модели ингредиента в рецепте (Ingredient On Recipe)"""
+MIN_AMOUNT_INGREDIENT_INREC = 1
+DEFAULT_AMOUNT_INGREDIENT_INREC = 1
+
+"""Константы модели пользователя (User)"""
+MAX_LENGTH_EMAIL_USER = 250
+MAX_LENGTH_USERNAME_USER = 150
+MAX_LENGTH_FIRST_NAME_USER = 150
+MAX_LENGTH_LAST_NAME_USER = 150

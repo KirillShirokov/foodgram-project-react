@@ -1,30 +1,39 @@
-# from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from core.constants import Constant
+from core.constants import (MAX_LENGTH_EMAIL_USER,
+                            MAX_LENGTH_USERNAME_USER,
+                            MAX_LENGTH_FIRST_NAME_USER,
+                            MAX_LENGTH_LAST_NAME_USER)
 
 
 class User(AbstractUser):
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = [
+        'username',
+        'first_name',
+        'last_name',
+    ]
+
     email = models.EmailField(
-        max_length=Constant.max_length_email_user.value,
+        max_length=MAX_LENGTH_EMAIL_USER,
         unique=True,
         blank=False,
         null=False
     )
     username = models.CharField(
-        max_length=Constant.max_length_username_user.value,
+        max_length=MAX_LENGTH_USERNAME_USER,
         unique=True,
         blank=False,
         null=False
     )
     first_name = models.CharField(
-        max_length=Constant.max_length_first_name_user.value,
+        max_length=MAX_LENGTH_FIRST_NAME_USER,
         blank=False,
         null=False
     )
     last_name = models.CharField(
-        max_length=Constant.max_length_last_name_user.value,
+        max_length=MAX_LENGTH_LAST_NAME_USER,
         blank=False,
         null=False
     )
