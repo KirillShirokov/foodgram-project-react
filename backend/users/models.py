@@ -1,10 +1,9 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from core.constants import (MAX_LENGTH_EMAIL_USER,
-                            MAX_LENGTH_USERNAME_USER,
-                            MAX_LENGTH_FIRST_NAME_USER,
-                            MAX_LENGTH_LAST_NAME_USER)
+from core.constants import (MAX_LENGTH_EMAIL_USER, MAX_LENGTH_FIRST_NAME_USER,
+                            MAX_LENGTH_LAST_NAME_USER,
+                            MAX_LENGTH_USERNAME_USER)
 
 
 class User(AbstractUser):

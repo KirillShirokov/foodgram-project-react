@@ -1,19 +1,14 @@
-from django.core.validators import (MinValueValidator,
-                                    RegexValidator,
-                                    MaxValueValidator)
+from django.core.validators import (MaxValueValidator, MinValueValidator,
+                                    RegexValidator)
 from django.db import models
 
-from users.models import User
-from core.constants import (MAX_LENGTH_NAME_ING,
+from core.constants import (DEFAULT_AMOUNT_INGREDIENT_INREC,
+                            MAX_COOKING_TIME_REC, MAX_LENGTH_COLOR_TAG,
                             MAX_LENGTH_MEASUREMENT_UNIT_ING,
-                            MAX_LENGTH_NAME_TAG,
-                            MAX_LENGTH_COLOR_TAG,
-                            MAX_LENGTH_SLUG_TAG,
-                            MAX_LENGTH_NAME_REC,
-                            MIN_COOKING_TIME_REC,
-                            MAX_COOKING_TIME_REC,
-                            MIN_AMOUNT_INGREDIENT_INREC,
-                            DEFAULT_AMOUNT_INGREDIENT_INREC)
+                            MAX_LENGTH_NAME_ING, MAX_LENGTH_NAME_REC,
+                            MAX_LENGTH_NAME_TAG, MAX_LENGTH_SLUG_TAG,
+                            MIN_AMOUNT_INGREDIENT_INREC, MIN_COOKING_TIME_REC)
+from users.models import User
 
 
 class Ingredient(models.Model):

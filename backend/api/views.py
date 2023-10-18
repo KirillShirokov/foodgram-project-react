@@ -1,26 +1,19 @@
-from django.shortcuts import get_object_or_404
-from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Sum
 from django.http import HttpResponse
-
+from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet as DjoserUserViewSet
 from rest_framework import viewsets
-from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
 
-from api.filters import RecipeFilter, IngredientFilter
 from api import serializers
+from api.filters import IngredientFilter, RecipeFilter
 from api.permissions import IsAdminOrAuthorOrReadOnly
-from recipes.models import (
-    Ingredient,
-    Tag,
-    Recipe,
-    IngredientOnRecipe,
-    FavoriteRecipe,
-    ShoppingList,
-)
+from recipes.models import (FavoriteRecipe, Ingredient, IngredientOnRecipe,
+                            Recipe, ShoppingList, Tag)
 from users.models import Follow, User
 
 
@@ -79,8 +72,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def delete_shopping_cart(self, request, pk):
         shopping_cart = get_object_or_404(ShoppingList,
                                           recipe=pk,
-                                          user=request.user)
-        shopping_cart.delete()
+                                          user=request.user).delete()
         return Response(status=204)
 
     @action(detail=False,
@@ -127,8 +119,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def delete_favorite(self, request, pk):
         favorite_recipe = get_object_or_404(FavoriteRecipe,
                                             recipe=pk,
-                                            user=request.user)
-        favorite_recipe.delete()
+                                            user=request.user).delete()
         return Response(status=204)
 
 
@@ -171,6 +162,5 @@ class UserViewSet(DjoserUserViewSet):
     def delete_subscribe(self, request, id):
         user_subscribe = get_object_or_404(Follow,
                                            user=request.user,
-                                           following=id)
-        user_subscribe.delete()
+                                           following=id).delete()
         return Response(status=204)

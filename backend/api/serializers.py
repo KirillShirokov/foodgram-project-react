@@ -1,17 +1,11 @@
 import base64
+from django.core.files.base import ContentFile
 from django.db.transaction import atomic
 from djoser.serializers import UserCreateSerializer, UserSerializer
-from django.core.files.base import ContentFile
-
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
-from recipes.models import (
-    Ingredient,
-    Tag,
-    Recipe,
-    IngredientOnRecipe,
-)
+from recipes.models import Ingredient, IngredientOnRecipe, Recipe, Tag
 from users.models import User
 
 
