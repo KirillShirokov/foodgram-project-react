@@ -28,10 +28,10 @@ services:
   nginx:
     image: nginx:1.19.3
     ports:
-      - "8000:80"
+      - "80:80"
     volumes:
-      - ../nginx/nginx.conf:/etc/nginx/sites-enabled/default
-      - ../frontend/build:/usr/share/nginx/html/
+      # - ../nginx/nginx.conf:/etc/nginx/sites-enabled/default
+      # - ../frontend/build:/usr/share/nginx/html/
       - backend_static:/app/backend_static/
       - backend_media:/app/backend_media/
       - ../docs/:/usr/share/nginx/html/api/docs/
