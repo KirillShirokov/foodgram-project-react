@@ -1,4 +1,4 @@
-# Kittygram
+# Foodgram
 ![FOODGRAM](https://github.com/KirillShirokov/foodgram-project-react/actions/workflows/main.yml/badge.svg)
 
 Если вы любите делиться вкусно поесть и делиться рецептами, то вы на правильном пути. Данный проект позволяет авторизованным пользователям публиковать рецепты с ваших любимых блюд. 
@@ -41,7 +41,7 @@ sudo systemctl reload nginx
   - TELEGRAM_TO (Ваш ID в телеграм)
   - TELEGRAM_TOKEN (Токен вашего бота в телеграм)
   - USER (Логин вашего сервера)
-- Замените в файле docker-compose.ptoduct.yml наименования образов в соответвии с вагим логином на DockerHub(Например your_name/kittygram_backend)
+- Замените в файле docker-compose.ptoduct.yml наименования образов в соответвии с вашим логином на DockerHub(Например your_name/kittygram_backend)
 - Далее git add ./ git commit/ git push
 Ваш Git Action проведет тесты, соберет образы и отправит их на репозиторий, задеплоит ваш проект на сервер и даже уведомит вас в стучае успеха в телеграм.
 
