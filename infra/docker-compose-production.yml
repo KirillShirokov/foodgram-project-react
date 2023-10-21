@@ -12,13 +12,13 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
   frontend:
-    build: ../frontend/
+    image: kirillshirokov/foodgram_frontend
     env_file: .env
     command: cp -r /app/build/. /static/
     volumes:
       - ../frontend/:/app/result_build/
   backend:
-    build: ../backend/
+    image: kirillshirokov/foodgram_backend
     env_file: .env
     depends_on:
       - db
