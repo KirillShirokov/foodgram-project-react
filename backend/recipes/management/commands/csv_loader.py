@@ -19,4 +19,3 @@ class Command(BaseCommand):
                     name=name,
                     meashurement_unit=meashurement_unit))
             Ingredient.objects.bulk_create(ingredients)
-
