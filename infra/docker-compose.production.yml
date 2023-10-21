@@ -28,7 +28,7 @@ services:
   nginx:
     image: nginx:1.19.3
     ports:
-      - "80:80"
+      - "8090:80"
     volumes:
       # - ../nginx/nginx.conf:/etc/nginx/sites-enabled/default
       # - ../frontend/build:/usr/share/nginx/html/
