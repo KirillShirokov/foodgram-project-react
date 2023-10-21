@@ -20,4 +20,3 @@ class Command(BaseCommand):
                     meashurement_unit=meashurement_unit))
             Ingredient.objects.bulk_create(ingredients)
 
-        print('Загрузка в БД прошла успешно')
