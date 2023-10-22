@@ -10,7 +10,7 @@ class Command(BaseCommand):
     help = 'Загрузка ингредиентов в БД'
 
     def handle(self, *args, **kwargs):
-        file_path = settings.BASE_DIR / 'static' / 'data' / 'ingredients.csv'
+        file_path = settings.BASE_DIR / 'static_data' / 'data' / 'ingredients.csv'
         with open(file_path, encoding='utf8') as file:
             reader = csv.reader(file, delimiter=',')
             Ingredient.objects.all().delete()

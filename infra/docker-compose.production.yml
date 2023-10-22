@@ -5,7 +5,8 @@ volumes:
   backend_media:
   postgres_data:
 
-services:  
+services:
+
   db:    
     image: postgres:13
     env_file: .env
@@ -13,12 +14,14 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     ports:
       - "5432:5432"
+
   frontend:
     image: kirillshirokov/foodgram_frontend
     env_file: .env
     command: cp -r /app/build/. /static/
     volumes:
       - ../frontend/:/app/result_build/
+
   backend:
     image: kirillshirokov/foodgram_backend
     env_file: .env
@@ -29,6 +32,7 @@ services:
     volumes:
       - backend_static:/app/static/
       - backend_media:/app/media/
+
   nginx:
     image: nginx:1.19.3
     ports:
