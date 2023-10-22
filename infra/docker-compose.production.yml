@@ -25,8 +25,8 @@ services:
     depends_on:
       - db
     volumes:
-      - backend_static:/app/backend_static/
-      - backend_media:/app/backend_media/
+      - backend_static:/app/static/
+      - backend_media:/app/media/
   nginx:
     image: nginx:1.19.3
     ports:
@@ -34,6 +34,6 @@ services:
     volumes:
       # - ../nginx/nginx.conf:/etc/nginx/sites-enabled/default
       # - ../frontend/build:/usr/share/nginx/html/
-      - backend_static:/app/backend_static/
-      - backend_media:/app/backend_media/
+      - backend_static:/app/static/
+      - backend_media:/app/media/
       # - ../docs/:/usr/share/nginx/html/api/docs/
