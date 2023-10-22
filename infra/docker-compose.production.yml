@@ -28,7 +28,8 @@ services:
       - backend_static:/app/backend_static/
       - backend_media:/app/media/
   nginx:
-    image: nginx:1.19.3
+    # image: nginx:1.19.3
+    image: kirillshirokov/foodgram_nginx
     ports:
       - "8090:80"
     volumes:
