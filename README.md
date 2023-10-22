@@ -44,6 +44,10 @@ sudo systemctl reload nginx
 - Замените в файле docker-compose.ptoduct.yml наименования образов в соответвии с вашим логином на DockerHub(Например your_name/kittygram_backend)
 - Далее git add ./ git commit/ git push
 Ваш Git Action проведет тесты, соберет образы и отправит их на репозиторий, задеплоит ваш проект на сервер и даже уведомит вас в стучае успеха в телеграм.
+После первого деплоя, для заполнения БД ингредиентами необходимо на удаленном сервере из директории *foodgram/infra* выполнить команду:
+```
+sudo docker compose -f docker-compose.production.yml exec backend python manage.py csv_loader
+```
 
 ## Технологии:
 **Docker Compose**
