@@ -70,9 +70,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     @shopping_cart.mapping.delete
     def delete_shopping_cart(self, request, pk):
-        shopping_cart = get_object_or_404(ShoppingList,
-                                          recipe=pk,
-                                          user=request.user).delete()
+        get_object_or_404(ShoppingList,
+                          recipe=pk,
+                          user=request.user).delete()
         return Response(status=204)
 
     @action(detail=False,
@@ -117,9 +117,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     @favorite.mapping.delete
     def delete_favorite(self, request, pk):
-        favorite_recipe = get_object_or_404(FavoriteRecipe,
-                                            recipe=pk,
-                                            user=request.user).delete()
+        get_object_or_404(FavoriteRecipe,
+                          recipe=pk,
+                          user=request.user).delete()
         return Response(status=204)
 
 
@@ -160,7 +160,5 @@ class UserViewSet(DjoserUserViewSet):
 
     @subscribe.mapping.delete
     def delete_subscribe(self, request, id):
-        user_subscribe = get_object_or_404(Follow,
-                                           user=request.user,
-                                           following=id).delete()
+        get_object_or_404(Follow, user=request.user, following=id).delete()
         return Response(status=204)
