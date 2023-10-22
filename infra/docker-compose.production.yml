@@ -27,8 +27,6 @@ services:
     volumes:
       - backend_static:/app/backend_static/
       - backend_media:/app/backend_media/
-    ports:
-      - "80:80"
   nginx:
     image: nginx:1.19.3
     ports:
