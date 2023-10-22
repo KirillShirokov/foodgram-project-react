@@ -13,12 +13,11 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     ports:
-      - "5433:5433"
+      - "5432:5432"
 
   frontend:
     image: kirillshirokov/foodgram_frontend
     env_file: .env
-    command: cp -r /app/build/. /static/
     volumes:
       - ../frontend/:/app/result_build/
 
@@ -38,7 +37,7 @@ services:
     ports:
       - "8090:80"
     volumes:
-      - ./nginx.conf:/etc/nginx/templates/default.comf.template
+      - ./nginx.conf:/etc/nginx/templates/default.conf.template
       - ../frontend/build:/usr/share/nginx/html/
       - backend_static:/app/static/
       - backend_media:/app/media/
