@@ -110,13 +110,14 @@ jobs:
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         
         script: |
-          cd foodgram/infra
-          sudo docker compose -f docker-compose.production.yml pull
+          cd foodgram/infra          
           sudo docker compose -f docker-compose.production.yml down
+          sudo docker compose -f docker-compose.production.yml pull
           sudo docker compose -f docker-compose.production.yml up -d
           sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
           sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
           sudo docker compose -f docker-compose.production.yml exec backend python manage.py csv_loader
+          sudo docker image prune --force
           sudo systemctl restart nginx          
   # send_message:
   #   runs-on: ubuntu-latest
