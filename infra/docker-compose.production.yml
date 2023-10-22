@@ -38,4 +38,8 @@ services:
       - ../frontend/build:/usr/share/nginx/html/
       - backend_static:/app/static/
       - backend_media:/app/media/
-     - ../docs/:/usr/share/nginx/html/api/docs/
+      - ../docs/:/usr/share/nginx/html/api/docs/
+
+    depends_on:
+      - backend
+      - frontend
