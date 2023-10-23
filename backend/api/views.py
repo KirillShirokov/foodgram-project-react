@@ -57,13 +57,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
-    def partial_update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        if instance.author != request.user:
-            raise PermissionDenied("Вы не можете обновлять этот рецепт!")
-        kwargs["partial"] = False
-        return self.update(request, *args, **kwargs)
-
     @action(detail=True,
             methods=['POST'],
             permission_classes=(IsAuthenticated,)
