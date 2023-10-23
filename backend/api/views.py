@@ -1,4 +1,4 @@
-from django.core.exceptions import PermissionDenied
+# from django.core.exceptions import PermissionDenied
 from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
@@ -12,8 +12,8 @@ from rest_framework.response import Response
 
 from api import serializers
 from api.filters import IngredientFilter, RecipeFilter
-from api.permissions import IsAdminOrAuthorOrReadOnly
 from api.paginator import CustomPagination
+from api.permissions import IsAdminOrAuthorOrReadOnly
 from recipes.models import (FavoriteRecipe, Ingredient, IngredientOnRecipe,
                             Recipe, ShoppingList, Tag)
 from users.models import Follow, User
