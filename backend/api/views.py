@@ -6,13 +6,14 @@ from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet as DjoserUserViewSet
 from rest_framework import viewsets
 from rest_framework.decorators import action
-from rest_framework.pagination import PageNumberPagination
+# from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from api import serializers
 from api.filters import IngredientFilter, RecipeFilter
 from api.permissions import IsAdminOrAuthorOrReadOnly
+from api.paginator import CustomPagination
 from recipes.models import (FavoriteRecipe, Ingredient, IngredientOnRecipe,
                             Recipe, ShoppingList, Tag)
 from users.models import Follow, User
@@ -44,7 +45,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         'ingredients_amount',
         'ingredients_amount__ingredient'
     ).all()
-    pagination_class = PageNumberPagination
+    pagination_class = CustomPagination
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
 
