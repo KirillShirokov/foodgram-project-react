@@ -48,7 +48,49 @@ sudo systemctl reload nginx
 ```
 sudo docker compose -f docker-compose.production.yml exec backend python manage.py csv_loader
 ```
+## Справка
+- Nginx сервера можно проверить командой:
+```
+sudo nano /etc/nginx/sites-enabled/default
 
+```
+```
+server {
+    server_name <Имя_вашего_домена.домен>;
+
+    location / {
+        client_max_body_size 20M;
+        proxy_set_header        Host $host;
+        proxy_set_header        X-Real-IP $remote_addr;
+        proxy_set_header        X-Forwarded-Proto $scheme;
+        proxy_pass              http://127.0.0.1:здесь_указать_порт_контейнера_nginx;
+    }
+
+#Ниже код, созданный автоматически Cerbot при получении сертификата SSL
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/foodcat-yandex.ddns.net/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/foodcat-yandex.ddns.net/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+
+
+server {
+    if ($host = foodcat-yandex.ddns.net) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    server_name 158.160.22.151 foodcat-yandex.ddns.net;
+    listen 80;
+    return 404; # managed by Certbot
+
+
+}
+
+```
 ## Технологии:
 **Docker Compose**
 **Docker**

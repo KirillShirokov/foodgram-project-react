@@ -12,6 +12,8 @@ services:
     env_file: .env
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
 
   frontend:
     build: ../frontend/
@@ -30,9 +32,6 @@ services:
 
   nginx:
     image: nginx:1.19.3
-    depends_on:
-      - backend
-      - frontend
     ports:
       - "80:80"
     volumes:
@@ -41,3 +40,7 @@ services:
       - backend_static:/app/static/
       - backend_media:/app/media/
       - ../docs/:/usr/share/nginx/html/api/docs/
+    depends_on:
+      - backend
+      - frontend
+
